@@ -12,29 +12,47 @@
     overflow: hidden;
   }
   * { text-align: center; padding: 0; margin: 0;}
-  h1 { font-size: 22vw; }
+  output { font-size: 17vmin; }
   p { font-size: 3vw; }
 </style>
 
-<p>Seconds to project deadline:</p>
-<h1>⟳</h1>
+
+<p>Time to project deadline&hellip;</p>
+<p><output id=days>⟳</output> days</p>
+<p><output id=hours>⟳</output> hours</p>
+<p><output id=minutes>⟳</output> minutes</p>
+<p><output id=seconds>⟳</output> seconds</p>
+
 <p>&hellip; so get on with it :-)</p>
 
 <script>
-
+  const ok = "📚👀🎓🎉";
+  const el = {}
   const d = new Date('2021-05-07T23:00:00');
   const future = d.valueOf();
-  const h1 = document.querySelector('h1');
   const formatter = new Intl.NumberFormat();
+
+  el.seconds = document.querySelector('#seconds');
+  el.minutes = document.querySelector('#minutes');
+  el.hours = document.querySelector('#hours');
+  el.days = document.querySelector('#days');
 
   function refresh() {
     const now = Date.now();
     const diff = future - now;
     const seconds = diff / 1000
-    const formatted = seconds>0 ? formatter.format(seconds.toFixed()) : "📚👀🎓🎉";
-    h1.textContent = formatted;
+    const minutes = seconds / 60;
+    const hours = minutes / 60;
+    const days = hours / 24;
+
+    el.seconds.textContent = seconds>0 ? formatter.format(seconds.toFixed()) : ok;
+    el.minutes.textContent = minutes>0 ? formatter.format(minutes.toFixed()) : ok;
+    el.hours.textContent = hours>0 ? formatter.format(hours.toFixed()) : ok;
+    el.days.textContent = days>0 ? formatter.format(days.toFixed()) : ok;
+
+
   }
 
-  setInterval(refresh, 1000);
+  setInterval(refresh, 250);
 
 </script>
