@@ -13,29 +13,36 @@
   }
   * { text-align: center; padding: 0; margin: 0;}
   output { font-size: 17vmin; }
-  p { font-size: 3vw; }
+  p { font-size: 2vw; }
+  #dl {
+    display: block;
+  }
 </style>
 
 
-<p>Time to the <em>extended</em> project deadline&hellip;</p>
-<p><output id=days>⟳</output> days</p>
-<p><output id=hours>⟳</output> hours</p>
-<p><output id=minutes>⟳</output> minutes</p>
+<p>The <em>extended</em> project deadline is <span id=dl></span>which is approximately&hellip;</p>
+<p><output id=days>⟳</output> days, or</p>
+<p><output id=hours>⟳</output> hours, or</p>
+<p><output id=minutes>⟳</output> minutes, or</p>
 <p><output id=seconds>⟳</output> seconds</p>
 
-<p>&hellip; so get on with it :-)</p>
+<p>&hellip; from now :-)</p>
 
 <script>
   const ok = "📚👀🎓🎉";
   const el = {}
   const d = new Date('2021-05-21T23:00:00');
   const future = d.valueOf();
-  const formatter = new Intl.NumberFormat();
+  const opts = { year: 'numeric', month: 'numeric', day: 'numeric'};
+  const numFormatter = new Intl.NumberFormat();
+  const dateFormatter = new Intl.DateTimeFormat('en-GB', opts);
+
 
   el.seconds = document.querySelector('#seconds');
   el.minutes = document.querySelector('#minutes');
   el.hours = document.querySelector('#hours');
   el.days = document.querySelector('#days');
+  el.dl = document.querySelector('#dl');
 
   function refresh() {
     const now = Date.now();
@@ -45,11 +52,12 @@
     const hours = minutes / 60;
     const days = hours / 24;
 
-    el.seconds.textContent = seconds>0 ? formatter.format(seconds.toFixed()) : ok;
-    el.minutes.textContent = minutes>0 ? formatter.format(minutes.toFixed()) : ok;
-    el.hours.textContent = hours>0 ? formatter.format(hours.toFixed()) : ok;
-    el.days.textContent = days>0 ? formatter.format(days.toFixed()) : ok;
-
+    el.seconds.textContent = seconds>0 ? numFormatter.format(seconds.toFixed()) : ok;
+    el.minutes.textContent = minutes>0 ? numFormatter.format(minutes.toFixed()) : ok;
+    el.hours.textContent = hours>0 ? numFormatter.format(hours.toFixed()) : ok;
+    el.days.textContent = days>0 ? numFormatter.format(days.toFixed()) : ok;
+    el.dl.textContent = d.toDateString();
+    el.dl.textContent += " " + d.toTimeString();
   }
 
   setInterval(refresh, 250);
