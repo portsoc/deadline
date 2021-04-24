@@ -1,0 +1,17 @@
+{
+  "name": "deadliner",
+  "version": "1.0.0",
+  "description": "Deadline countdown",
+  "main": "index.html",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ear1grey/deadline.git"
+  },
+  "keywords": ["deadline", "pwa", "installable", "date", "countdown", "days until", "time until"],
+  "author": "softeng@port.ac.uk",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ear1grey/deadline/issues"
+  },
+  "homepage": "https://github.com/ear1grey/deadline#readme"
+}
