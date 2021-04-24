@@ -1,0 +1,25 @@
+* {
+  text-align: center;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  height: 100vh;
+  overflow: hidden;
+}
+
+output {
+  font-size: 17vmin;
+}
+
+p {
+  font-size: 2vw;
+}
+
+#dl {
+  display: block;
+}

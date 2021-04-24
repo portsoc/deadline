@@ -1,0 +1,16 @@
+{
+  "name": "Deadline Countdown",
+  "short_name": "Deadliner",
+  "icons": [
+    {
+      "src": "icons/deadliner.svg",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/stages/1/index.html",
+  "scope": "/",
+  "display": "standalone",
+  "lang": "en",
+  "theme_color": "#336699",
+  "background_color": "#FFFFFF"
+}
