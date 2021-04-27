@@ -26,8 +26,17 @@ function refreshPage() {
   el.dl.textContent += ' ' + d.toTimeString();
 }
 
-function init() {
+async function initServiceWorker() {
+  try {
+    await navigator.serviceWorker.register('./worker.js');
+  } catch (e) {
+    console.warn("Service Worker failed.  Falling back to 'online only'.", e);
+  }
+}
+
+async function init() {
   refreshPage();
+  await initServiceWorker();
   setInterval(refreshPage, 250);
 }
 
