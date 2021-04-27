@@ -67,11 +67,20 @@ async function loadConfig() {
   config = await response.json();
 }
 
+async function notify(msg) {
+  const permission = await Notification.requestPermission();
+  if (permission === 'granted') {
+    const reg = await navigator.serviceWorker.getRegistration();
+    reg.showNotification('Deadliner: ' + msg);
+  }
+}
+
 async function init() {
   refreshPage();
   await initServiceWorker();
   await loadConfig();
   setInterval(refreshPage, 250);
+  notify('hello!');
 }
 
 window.addEventListener('load', init);
