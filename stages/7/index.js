@@ -110,10 +110,10 @@ async function prepNotifications() {
 }
 
 async function init() {
+  refreshPage();
   await initServiceWorker();
   await loadConfig();
   await prepNotifications();
-  refreshPage();
   setInterval(refreshPage, 250);
 }
 
