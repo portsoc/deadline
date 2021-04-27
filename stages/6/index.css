@@ -1,17 +1,16 @@
+:root {
+  --layout: grid;
+  --side: right;
+  --gap: 0;
+}
+
+@media (max-width: 800px) {
   :root {
-    --layout: grid;
-    --side: right;
-    --gap: 0;
+    --layout: inherit;
+    --side: inherit;
+    --gap: 1em;
   }
-
-  @media (max-width: 800px) {
-    :root {
-      --layout: inherit;
-      --side: inherit;
-      --gap: 1em;
-    }
-  }
-
+}
 
 body {
   align-content: center;
