@@ -1,16 +1,8 @@
 const DEADLINER = 'Deadliner';
 const ok = "Time's up!";
-const el = {};
 let config = [{ date: '1970-01-01T00:00:00', name: '⟳' }];
 
 const numFormatter = new Intl.NumberFormat();
-
-el.seconds = document.querySelector('#seconds');
-el.minutes = document.querySelector('#minutes');
-el.hours = document.querySelector('#hours');
-el.days = document.querySelector('#days');
-el.dl = document.querySelector('#dl');
-el.name = document.querySelector('#name');
 
 function p(txt, ...cls) {
   const para = document.createElement('p');
@@ -57,18 +49,17 @@ function refreshRow(row) {
 function refreshPage() {
   // need to refactor to be less lazy and only update times
   // until then - lazy
-  document.body.innerHTML = '';
+  document.body.textContent = '';
   for (const row of config) {
     refreshRow(row);
   }
 }
 
 async function initServiceWorker() {
-  if (!navigator.serviceWorker) return;
   try {
     await navigator.serviceWorker.register('./worker.js');
   } catch (e) {
-    console.error("Service Worker failed.  Falling back to 'online only'.", e);
+    console.warn("Service Worker failed.  Falling back to 'online only'.", e);
   }
 }
 
@@ -80,7 +71,7 @@ async function loadConfig() {
 async function notify(msg, timestamp) {
   const permission = await Notification.requestPermission();
   if (permission === 'granted') {
-    const options = { tag: DEADLINER+timestamp };
+    const options = { tag: DEADLINER + timestamp };
     if (timestamp) {
       options.showTrigger = new TimestampTrigger(timestamp);
     }
@@ -122,6 +113,7 @@ async function init() {
   await initServiceWorker();
   await loadConfig();
   await prepNotifications();
+  refreshPage();
   setInterval(refreshPage, 250);
 }
 

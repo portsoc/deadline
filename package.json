@@ -41,6 +41,9 @@
     "root": true,
     "env": {
       "browser": true
+    },
+    "globals": {
+      "TimestampTrigger": true
     }
   }
 }

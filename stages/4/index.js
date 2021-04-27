@@ -1,4 +1,4 @@
-const ok = '📚👀🎓🎉';
+const ok = "Time's up!";
 const el = {};
 const d = new Date('2021-05-21T23:00:00');
 const future = d.valueOf();
@@ -10,7 +10,7 @@ el.hours = document.querySelector('#hours');
 el.days = document.querySelector('#days');
 el.dl = document.querySelector('#dl');
 
-function refresh() {
+function refreshPage() {
   const now = Date.now();
   const diff = future - now;
   const seconds = diff / 1000;
@@ -27,18 +27,17 @@ function refresh() {
 }
 
 async function initServiceWorker() {
-  if (!navigator.serviceWorker) return;
   try {
     await navigator.serviceWorker.register('./worker.js');
   } catch (e) {
-    console.error("Service Worker failed.  Falling back to 'online only'.", e);
+    console.warn("Service Worker failed.  Falling back to 'online only'.", e);
   }
 }
 
 function init() {
-  refresh();
   initServiceWorker();
-  setInterval(refresh, 250);
+  refreshPage();
+  setInterval(refreshPage, 250);
 }
 
 window.addEventListener('load', init);
