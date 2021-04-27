@@ -36,6 +36,7 @@ async function initServiceWorker() {
 }
 
 function init() {
+  refresh();
   initServiceWorker();
   setInterval(refresh, 250);
 }

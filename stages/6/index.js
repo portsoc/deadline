@@ -1,6 +1,6 @@
 const ok = "Time's up!";
 const el = {};
-let config = [{ date: '2021-05-03T13:23:45', name: 'Something' }];
+let config = [{ date: '1970-01-01T00:00:00', name: '⟳' }];
 
 const numFormatter = new Intl.NumberFormat();
 
@@ -65,7 +65,7 @@ function refreshPage() {
 async function initServiceWorker() {
   if (!navigator.serviceWorker) return;
   try {
-    return await navigator.serviceWorker.register('./worker.js');
+    await navigator.serviceWorker.register('./worker.js');
   } catch (e) {
     console.error("Service Worker failed.  Falling back to 'online only'.", e);
   }
@@ -76,11 +76,10 @@ async function loadConfig() {
   config = await response.json();
 }
 
-async function prepNotification(msg) {
+async function notify(msg) {
   const permission = await Notification.requestPermission();
   if (permission === 'granted') {
     const reg = await navigator.serviceWorker.getRegistration();
-    console.log('queueing notification');
     reg.showNotification('Deadliner: ' + msg);
   }
 }
@@ -89,7 +88,7 @@ async function init() {
   await initServiceWorker();
   loadConfig();
   setInterval(refreshPage, 250);
-  await prepNotification('hello!');
+  await notify('hello!');
 }
 
 window.addEventListener('load', init);

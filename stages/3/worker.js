@@ -16,9 +16,7 @@ async function fetchFromCache(request) {
  * is overridden by he use of `respondWith`
  */
 function interceptFetch(evt) {
-  evt.respondWith(
-    fetchFromCache(evt.request),
-  );
+  evt.respondWith(fetchFromCache(evt.request));
 }
 
 /* Installing the service worker */

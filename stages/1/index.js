@@ -27,6 +27,7 @@ function refresh() {
 }
 
 function init() {
+  refresh();
   setInterval(refresh, 250);
 }
 

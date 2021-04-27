@@ -1,6 +1,6 @@
 const ok = "Time's up!";
 const el = {};
-let config = [{ date: '2021-05-03T13:23:45', name: 'Something' }];
+let config = [{ date: '1970-01-01T00:00:00', name: '⟳' }];
 
 const numFormatter = new Intl.NumberFormat();
 
