@@ -1,3 +1,4 @@
+const DEADLINER = 'Deadliner';
 const ok = "Time's up!";
 let config = [{ date: '1970-01-01T00:00:00', name: '⟳' }];
 
@@ -67,20 +68,53 @@ async function loadConfig() {
   config = await response.json();
 }
 
-async function notify(msg) {
+async function notify(msg, timestamp) {
   const permission = await Notification.requestPermission();
   if (permission === 'granted') {
+    const options = { tag: DEADLINER + timestamp };
+    if (timestamp) {
+      options.showTrigger = new TimestampTrigger(timestamp);
+    }
     const reg = await navigator.serviceWorker.getRegistration();
-    reg.showNotification('Deadliner: ' + msg);
+    reg.showNotification(msg, options);
   }
+}
+
+async function prepNotifications() {
+  // cances/close/remove any previously scheduled notifictions
+  const reg = await navigator.serviceWorker.getRegistration();
+  const notifications = await reg.getNotifications();
+  for (const notification of notifications) {
+    notification.close();
+  }
+
+  const ONE_MINUTE = 1000 * 60;
+  const TEN_MINUTES = 1000 * 60 * 10;
+  const ONE_HOUR = 1000 * 60 * 60;
+  const ONE_DAY = 1000 * 60 * 60 * 24;
+  const ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
+
+  /// add them all fresh
+  for (const row of config) {
+    const futureDate = new Date(row.date);
+    const futureMillis = futureDate.valueOf();
+    notify(row.name + ' deadline: sixty seconds', futureMillis - ONE_MINUTE);
+    notify(row.name + ' deadline: ten minutes', futureMillis - TEN_MINUTES);
+    notify(row.name + ' deadline: one hour', futureMillis - ONE_HOUR);
+    notify(row.name + ' deadline: this time tomorrow', futureMillis - ONE_DAY);
+    notify(row.name + ' deadline: one week from now', futureMillis - ONE_WEEK);
+  }
+
+  await notify('Notifications setup :-)');
+  await notify('Timed notifications setup :-)', Date.now() + 5000);
 }
 
 async function init() {
   refreshPage();
   await initServiceWorker();
   await loadConfig();
+  await prepNotifications();
   setInterval(refreshPage, 250);
-  notify('hello!');
 }
 
 window.addEventListener('load', init);
