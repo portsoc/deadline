@@ -1,10 +1,9 @@
+const DEADLINER = 'Deadliner';
 const ok = "Time's up!";
-const el = {}
-let config = [ { "date": "2021-05-03T13:23:45", "name": "Something" } ];
+const el = {};
+let config = [{ date: '1970-01-01T00:00:00', name: '⟳' }];
 
-const opts = { year: 'numeric', month: 'numeric', day: 'numeric'};
 const numFormatter = new Intl.NumberFormat();
-const dateFormatter = new Intl.DateTimeFormat('en-GB', opts);
 
 el.seconds = document.querySelector('#seconds');
 el.minutes = document.querySelector('#minutes');
@@ -21,7 +20,6 @@ function p(txt, ...cls) {
 }
 
 function refreshRow(row) {
-
   const futureDate = new Date(row.date);
   const futureMillis = futureDate.valueOf();
 
@@ -29,28 +27,28 @@ function refreshRow(row) {
 
   const now = Date.now();
   const diff = futureMillis - now;
-  const seconds = diff / 1000
+  const seconds = diff / 1000;
   const minutes = seconds / 60;
   const hours = minutes / 60;
   const days = hours / 24;
 
   if (days > 2) {
-    p(numFormatter.format(days.toFixed()) + " days");
+    p(numFormatter.format(days.toFixed()) + ' days');
     return;
   }
 
   if (hours > 1) {
-    p(numFormatter.format(hours.toFixed()) + " hours");
+    p(numFormatter.format(hours.toFixed()) + ' hours');
     return;
   }
 
   if (minutes > 1) {
-    p(numFormatter.format(minutes.toFixed()) + " minutes");
+    p(numFormatter.format(minutes.toFixed()) + ' minutes');
     return;
   }
 
   if (seconds > 0) {
-    p(numFormatter.format(seconds.toFixed()) + " seconds");
+    p(numFormatter.format(seconds.toFixed()) + ' seconds');
   } else {
     p(ok);
   }
@@ -59,7 +57,7 @@ function refreshRow(row) {
 function refreshPage() {
   // need to refactor to be less lazy and only update times
   // until then - lazy
-  document.body.innerHTML="";
+  document.body.innerHTML = '';
   for (const row of config) {
     refreshRow(row);
   }
@@ -68,7 +66,7 @@ function refreshPage() {
 async function initServiceWorker() {
   if (!navigator.serviceWorker) return;
   try {
-    return await navigator.serviceWorker.register('./worker.js');
+    await navigator.serviceWorker.register('./worker.js');
   } catch (e) {
     console.error("Service Worker failed.  Falling back to 'online only'.", e);
   }
@@ -79,27 +77,52 @@ async function loadConfig() {
   config = await response.json();
 }
 
-async function prepNotification(timestamp, msg) {
+async function notify(msg, timestamp) {
   const permission = await Notification.requestPermission();
-  if(permission === 'granted') {
+  if (permission === 'granted') {
+    const options = { tag: DEADLINER+timestamp };
+    if (timestamp) {
+      options.showTrigger = new TimestampTrigger(timestamp);
+    }
     const reg = await navigator.serviceWorker.getRegistration();
-    console.log('queueing notification');
-    reg.showNotification(
-      'Deadliner',
-      {
-        tag: timestamp, // a unique ID
-        body: msg, // content of the push notification
-        showTrigger: new TimestampTrigger(timestamp), // set the time for the push notification
-      }
-    );
+    reg.showNotification(msg, options);
   }
 }
 
+async function prepNotifications() {
+  // cances/close/remove any previously scheduled notifictions
+  const reg = await navigator.serviceWorker.getRegistration();
+  const notifications = await reg.getNotifications();
+  for (const notification of notifications) {
+    notification.close();
+  }
+
+  const ONE_MINUTE = 1000 * 60;
+  const TEN_MINUTES = 1000 * 60 * 10;
+  const ONE_HOUR = 1000 * 60 * 60;
+  const ONE_DAY = 1000 * 60 * 60 * 24;
+  const ONE_WEEK = 1000 * 60 * 60 * 24 * 7;
+
+  /// add them all fresh
+  for (const row of config) {
+    const futureDate = new Date(row.date);
+    const futureMillis = futureDate.valueOf();
+    notify(row.name + ' deadline: sixty seconds', futureMillis - ONE_MINUTE);
+    notify(row.name + ' deadline: ten minutes', futureMillis - TEN_MINUTES);
+    notify(row.name + ' deadline: one hour', futureMillis - ONE_HOUR);
+    notify(row.name + ' deadline: this time tomorrow', futureMillis - ONE_DAY);
+    notify(row.name + ' deadline: one week from now', futureMillis - ONE_WEEK);
+  }
+
+  await notify('Notifications setup :-)');
+  await notify('Timed notifications setup :-)', Date.now() + 5000);
+}
+
 async function init() {
-  const sw = await initServiceWorker();
-  loadConfig();
+  await initServiceWorker();
+  await loadConfig();
+  await prepNotifications();
   setInterval(refreshPage, 250);
-  await prepNotification(new Date().getTime() + 5 * 1000, "hello" );
 }
 
 window.addEventListener('load', init);

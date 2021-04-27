@@ -42,7 +42,5 @@ async function installMyServiceWorker() {
   }
 }
 
-
-// install the event listsner so it can run in the background.
 self.addEventListener('install', installMyServiceWorker);
 self.addEventListener('fetch', interceptFetch);
