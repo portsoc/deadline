@@ -1,29 +1,57 @@
 const ok = "Time's up!";
-const el = {};
-const d = new Date('2021-05-21T23:00:00');
-const future = d.valueOf();
+let config = [{ date: '1970-01-01T00:00:00', name: '⟳' }];
+
 const numFormatter = new Intl.NumberFormat();
 
-el.seconds = document.querySelector('#seconds');
-el.minutes = document.querySelector('#minutes');
-el.hours = document.querySelector('#hours');
-el.days = document.querySelector('#days');
-el.dl = document.querySelector('#dl');
+function p(txt, ...cls) {
+  const para = document.createElement('p');
+  para.textContent = txt;
+  if (cls) para.classList.add(...cls);
+  document.body.append(para);
+}
 
-function refreshPage() {
+function refreshRow(row) {
+  const futureDate = new Date(row.date);
+  const futureMillis = futureDate.valueOf();
+
+  p(row.name, 'topic');
+
   const now = Date.now();
-  const diff = future - now;
+  const diff = futureMillis - now;
   const seconds = diff / 1000;
   const minutes = seconds / 60;
   const hours = minutes / 60;
   const days = hours / 24;
 
-  el.seconds.textContent = seconds > 0 ? numFormatter.format(seconds.toFixed()) : ok;
-  el.minutes.textContent = minutes > 0 ? numFormatter.format(minutes.toFixed()) : ok;
-  el.hours.textContent = hours > 0 ? numFormatter.format(hours.toFixed()) : ok;
-  el.days.textContent = days > 0 ? numFormatter.format(days.toFixed()) : ok;
-  el.dl.textContent = d.toDateString();
-  el.dl.textContent += ' ' + d.toTimeString();
+  if (days > 2) {
+    p(numFormatter.format(days.toFixed()) + ' days');
+    return;
+  }
+
+  if (hours > 1) {
+    p(numFormatter.format(hours.toFixed()) + ' hours');
+    return;
+  }
+
+  if (minutes > 1) {
+    p(numFormatter.format(minutes.toFixed()) + ' minutes');
+    return;
+  }
+
+  if (seconds > 0) {
+    p(numFormatter.format(seconds.toFixed()) + ' seconds');
+  } else {
+    p(ok);
+  }
+}
+
+function refreshPage() {
+  // need to refactor to be less lazy and only update times
+  // until then - lazy
+  document.body.textContent = '';
+  for (const row of config) {
+    refreshRow(row);
+  }
 }
 
 async function initServiceWorker() {
@@ -34,9 +62,15 @@ async function initServiceWorker() {
   }
 }
 
+async function loadConfig() {
+  const response = await fetch('./config.json');
+  config = await response.json();
+}
+
 async function init() {
   refreshPage();
   await initServiceWorker();
+  await loadConfig();
   setInterval(refreshPage, 250);
 }
 

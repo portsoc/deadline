@@ -4,6 +4,7 @@ const FILES = [
   './index.css',
   './index.js',
   './worker.js',
+  './config.json',
   './index.webmanifest',
   './icons/deadliner.svg',
 ];
