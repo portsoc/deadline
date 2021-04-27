@@ -3,15 +3,43 @@
   "version": "1.0.0",
   "description": "Deadline countdown",
   "main": "index.html",
+  "scripts": {
+    "stage0": "http-server stages/0",
+    "stage1": "http-server stages/1",
+    "stage2": "http-server stages/2",
+    "stage3": "http-server stages/3",
+    "stage4": "http-server stages/4",
+    "stage5": "http-server stages/5",
+    "stage6": "http-server stages/6"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ear1grey/deadline.git"
   },
-  "keywords": ["deadline", "pwa", "installable", "date", "countdown", "days until", "time until"],
+  "keywords": [
+    "deadline",
+    "pwa",
+    "installable",
+    "date",
+    "countdown",
+    "days until",
+    "time until"
+  ],
   "author": "softeng@port.ac.uk",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/ear1grey/deadline/issues"
   },
-  "homepage": "https://github.com/ear1grey/deadline#readme"
+  "homepage": "https://github.com/ear1grey/deadline#readme",
+  "devDependencies": {
+    "eslint": "^7.25.0",
+    "eslint-config-portsoc": "^0.8.1"
+  },
+  "eslintConfig": {
+    "extends": "portsoc",
+    "root": true,
+    "env": {
+      "browser": true
+    }
+  }
 }

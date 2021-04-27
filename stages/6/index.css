@@ -1,0 +1,35 @@
+  :root {
+    --layout: grid;
+    --side: right;
+    --gap: 0;
+  }
+
+  @media (max-width: 800px) {
+    :root {
+      --layout: inherit;
+      --side: inherit;
+      --gap: 1em;
+    }
+  }
+
+
+body {
+  align-content: center;
+  display: var(--layout);
+  font-size: max(3vw, 2rem);
+  grid-template-columns: repeat(2, auto);
+  justify-content: center;
+  min-height: 100vh;
+  width: 95vw;
+  background: var(--bg);
+}
+
+p {
+  margin: 1vw;
+}
+
+.topic {
+  color: #666;
+  text-align: var(--side);
+  padding-top: var(--gap);
+}
