@@ -34,9 +34,9 @@ async function initServiceWorker() {
   }
 }
 
-function init() {
-  initServiceWorker();
+async function init() {
   refreshPage();
+  await initServiceWorker();
   setInterval(refreshPage, 250);
 }
 

@@ -67,10 +67,10 @@ async function loadConfig() {
   config = await response.json();
 }
 
-function init() {
-  initServiceWorker();
-  loadConfig();
+async function init() {
   refreshPage();
+  await initServiceWorker();
+  await loadConfig();
   setInterval(refreshPage, 250);
 }
 

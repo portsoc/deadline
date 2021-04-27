@@ -75,10 +75,10 @@ async function notify(msg) {
   }
 }
 
-function init() {
-  initServiceWorker();
-  loadConfig();
+async function init() {
   refreshPage();
+  await initServiceWorker();
+  await loadConfig();
   setInterval(refreshPage, 250);
   notify('hello!');
 }

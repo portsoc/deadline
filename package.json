@@ -11,7 +11,8 @@
     "stage4": "http-server stages/4",
     "stage5": "http-server stages/5",
     "stage6": "http-server stages/6",
-    "stage7": "http-server stages/7"
+    "stage7": "http-server stages/7",
+    "lint": "eslint ."
   },
   "repository": {
     "type": "git",

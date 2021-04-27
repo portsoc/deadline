@@ -13,7 +13,7 @@ const FILES = [
  * cache so it's there next time.
  */
 async function fetchFromCache(request) {
-  const cache = await caches.open('deadliner');
+  const cache = await caches.open(CACHE);
   const data = await cache.match(request);
   if (data) {
     return data;
